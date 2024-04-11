@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Save Form Data</title>
+  </head>
+  <body>
+    <h1>Enter a summary of the story:</h1>
+    <form action="/save-form-data" method="post" enctype="multipart/form-data">
+      <input type="text" name="title" placeholder="Enter a title" />
+      <br />
+      <input type="text" name="author" placeholder="Enter the author's name" />
+      <br />
+      <textarea name="summary" placeholder="Enter a summary"></textarea>
+      <br />
+      <input type="file" name="pdf" accept=".pdf" />
+      <input type="hidden" name="uploadedPdf" id="uploadedPdf" />
+      <button type="submit">Save Form Data</button>
+    </form>
+    <script>
+      // Add an event listener to the form to handle the form submission
+      const form = document.querySelector('form');
+      form.addEventListener('submit', async (event) => {
+        // Prevent the default form submission behavior
+        event.preventDefault();
+
+        // Get the uploaded PDF file
+        const uploadedPdfInput = document.querySelector('input[name="pdf"]');
+        const uploadedPdfFile = uploadedPdfInput.files[0];
+
+        // Create a new FileReader object
+        const reader = new FileReader();
+
+        // Set the onload event handler for the FileReader object
+        reader.onload = async () => {
+          // Get the uploaded PDF file as an ArrayBuffer
+          const uploadedPdfBuffer = reader.result;
+
+          // Set the value of the hidden input field to the uploaded PDF file
+          const uploadedPdfInputHidden = document.querySelector('#uploadedPdf');
+          uploadedPdfInputHidden.value = uploadedPdfBuffer;
+
+          // Submit the form again
+          form.submit();
+        };
+
+        // Read the uploaded PDF file as an ArrayBuffer
+        reader.readAsArrayBuffer(uploadedPdfFile);
+      });
+    </script>
+  </body>
+</html>
